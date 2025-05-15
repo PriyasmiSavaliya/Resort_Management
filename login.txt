@@ -1,0 +1,18 @@
+Imports System.Data.OleDb
+Public Class Form1
+    Private Sub BtnLogin_Click(sender As Object, e As EventArgs) Handles BtnLogin.Click
+        Dim Username As String
+        Dim password As String
+        Username = txtusername.Text
+        password = txtPassword.Text
+        If (Username.Equals("piyu") And password.Equals("pass")) Then
+            MsgBox("Login Successfully")
+        End If
+        MsgBox("Login")
+        Home.Show()
+        Me.Hide()
+    End Sub
+Private Sub BtnExit_Click(sender As Object, e As EventArgs) Handles btnExit.Click
+        Application.Exit()
+    End Sub
+End Class

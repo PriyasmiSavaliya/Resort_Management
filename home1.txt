@@ -1,0 +1,85 @@
+Imports System.Data.OleDb
+Public Class UC_Addroom
+    Dim cn As New OleDbConnection
+    Dim cmd As OleDbCommand
+    Dim dr As OleDbDataReader
+    Dim adp As New OleDbDataAdapter
+    Dim ds As New DataSet
+    Public Sub Display()
+        ds.Clear()
+        adp = New OleDbDataAdapter("select * from room", cn)
+        adp.Fill(ds)
+        DataGridView1.DataSource = ds.Tables(0)
+    End Sub
+    Private Sub UC_Addroom_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        cn.ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=E:\BCA\2-year\4-sem\vb.net\project\Add_Room.accdb"
+        cn.Open()
+        Display()
+        cn.Close()
+    End Sub
+
+    Private Sub BtnAddroom_Click(sender As Object, e As EventArgs) Handles btnAddroom.Click
+        Try
+            cn.Open()
+            cmd = New OleDbCommand("insert into room values(" & txtRoomid.Text & "," & txtRoomno.Text & ",'" & txtRoomtype.Text & "','" & txtBed.Text & "','" & txtPrice.Text & "','" & txtBooked.Text & "')", cn)
+            cmd.ExecuteNonQuery()
+            MsgBox("Room Added")
+            Display()
+        Catch ex As Exception
+            MsgBox("Fill All Field")
+        End Try
+        cn.Close()
+    End Sub
+
+    Private Sub Btnupdate_Click(sender As Object, e As EventArgs) Handles btnupdate.Click
+        Try
+            cn.Open()
+            cmd = New OleDbCommand("update room set RoomNumber=" & txtRoomno.Text & ",RoomType='" & txtRoomtype.Text & "',Bed='" & txtBed.Text & "',Price=" & txtPrice.Text & ",Booked='" & txtBooked.Text & "' where RoomId=" & txtRoomid.Text & "", cn)
+            cmd.ExecuteNonQuery()
+            Display()
+            MsgBox("Record Updated")
+        Catch ex As Exception
+            MsgBox("Update details")
+        End Try
+        cn.Close()
+    End Sub
+
+    Private Sub Btndelete_Click(sender As Object, e As EventArgs) Handles btndelete.Click
+        Try
+            cn.Open()
+            cmd = New OleDbCommand("delete from room where RoomId=" & txtRoomid.Text & "", cn)
+            cmd.ExecuteNonQuery()
+            MsgBox("Record deleted")
+        Catch ex As Exception
+            MsgBox("Delete details")
+        End Try
+        cn.Close()
+    End Sub
+
+    Private Sub Btnsearch_Click(sender As Object, e As EventArgs) Handles btnsearch.Click
+        Try
+            cn.Open()
+            cmd = New OleDbCommand("select * from room where RoomId=" & txtRoomid.Text & "", cn)
+            dr = cmd.ExecuteReader
+            While dr.Read()
+                txtRoomno.Text = dr.Item(1)
+                txtRoomtype.Text = dr.Item(2)
+                txtBed.Text = dr.Item(3)
+                txtPrice.Text = dr.Item(4)
+                txtBooked.Text = dr.Item(5)
+            End While
+        Catch ex As Exception
+            MsgBox(ex.ToString,, "record not found")
+        End Try
+        cn.Close()
+    End Sub
+
+    Private Sub Btnclear_Click(sender As Object, e As EventArgs) Handles btnclear.Click
+        txtRoomid.Clear()
+        txtRoomno.Clear()
+    End Sub
+
+    Private Sub Btnclose_Click(sender As Object, e As EventArgs) Handles btnclose.Click
+
+    End Sub
+End Class
